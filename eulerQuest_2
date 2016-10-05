@@ -1,22 +1,16 @@
 #include <stdio.h>
-int first_num = NULL;
-int last_num = NULL;
-int sum = NULL;
-void fibonacci(int ,int);
 int main(void) {
-	sum = 2; // start with even number. '2'
-	fibonacci(1, 2);
-	printf("sum is %d\n", sum);
-	return 0;
-}
-void fibonacci(int n1, int n2) {
-	first_num = n2;
-	if (last_num <= 4000000) {
-		last_num = n1 + n2;
+	int sum=0, temp=0, first_num, last_num;
+	//init process
+	first_num = 1;
+	last_num = 2;
+	while (last_num<=4000000) {
+		temp = last_num;
 		if (last_num % 2 == 0)
 			sum += last_num;
+		last_num += first_num;
+		first_num = temp;
 	}
-	if (n2 + last_num <= 4000000)
-		fibonacci(first_num, last_num);
-	return;
+	printf("sum is %d\n", sum);
+	return 0;
 }
