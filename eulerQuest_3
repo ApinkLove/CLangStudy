@@ -1,0 +1,29 @@
+#include <stdio.h>
+int main(void) {
+	int i=2, j=2;
+	const unsigned __int64 guess = 600851475143;
+	unsigned int current_prime=2;
+	unsigned __int64 value = guess;
+	for (;;) {
+		if (i == 2) {
+			if (i == guess)
+				break;
+			if(guess%i == 0)
+				value /= i;
+		}
+		for (j = 2; j <= i; j++) {
+			if (i%j == 0 && i != j)
+				break;
+			if (i == j && guess%i == 0) {
+				value /= i;
+				current_prime = i;
+			}
+		}
+		if (value == 1) {
+			break;
+		}
+		i++;
+	}
+	printf("Answer is %ld\n", current_prime);
+	return 0;
+}
