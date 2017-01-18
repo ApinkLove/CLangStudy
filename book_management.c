@@ -1,20 +1,26 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <windows.h>
 void drawLine(int, char);
 void addBlank(int);
-void show_MainMenu();
-void addBook();
-void search_books();
-void manage_books();
+void show_MainMenu(struct book *book, int* current_book_number);
+void addBook(struct book *book, int* current_book_number);
+void search_books(struct book *book, int* current_book_number);
+void manage_books(struct book *book, int* current_book_number);
 int compare_str(char*, char*);
 void copy_str(char*, char*);
-char book_title[100][30];
-char book_author[100][20];
-char book_publisher[100][15];
-int current_book_number = 0;
-int state[100]={'0'}; // having : 0, borrowing : 1
+struct book {
+  char title[30];
+  char author[20];
+  char publisher[15];
+  int state; // having : 0, borrowing : 1
+};
 int main(void) {
-  show_MainMenu();
+  struct book book[100];
+  int current_book_number = 0;
+  for(int i=0; i<=100; i++) {
+    book[i].state=0;
+  }
+  show_MainMenu(book, &current_book_number);
   return 0;
 }
 void drawLine(int count, char word) {
@@ -29,7 +35,7 @@ void addBlank(int count) {
   }
   return;
 }
-void show_MainMenu() {
+void show_MainMenu(struct book *book, int* current_book_number) {
   system("cls");
   int behave_choice;
   drawLine(30, '*');
@@ -89,19 +95,19 @@ void show_MainMenu() {
   if(behave_choice<1 || behave_choice>4) {
     addBlank(2);
     printf("1~4번중에서 입력해주세요.\n");
-    show_MainMenu();
+    show_MainMenu(book, current_book_number);
     return;
   }
   switch(behave_choice) {
     case 1:
-      addBook();
-      current_book_number++;
+      addBook(book, current_book_number);
+      *current_book_number++;
     break;
     case 2:
-      search_books();
+      search_books(book, current_book_number);
     break;
     case 3:
-      manage_books();
+      manage_books(book, current_book_number);
     break;
     case 4:
       return;
@@ -109,7 +115,7 @@ void show_MainMenu() {
   }
   return;
 }
-void addBook() {
+void addBook(struct book *book, int* current_book_number) {
   system("cls");
   int exit_choice;
   printf("나가기를 원하시면 1번을 입력해주세요\n");
@@ -117,26 +123,26 @@ void addBook() {
   printf(": ");
   scanf("%d", &exit_choice);
   if(exit_choice==1) {
-    show_MainMenu();
+    show_MainMenu(book, current_book_number);
     return;
   }
   printf("책의 정보를 입력해주세요.\n");
   printf("\n");
   printf("책의 제목: ");
-  scanf("%s", book_title[current_book_number]);
+  scanf("%s", book[*current_book_number].title);
   printf("\n");
   printf("책의 저자: ");
-  scanf("%s", book_author[current_book_number]);
+  scanf("%s", book[*current_book_number].author);
   printf("\n");
   printf("책의 출판사: ");
-  scanf("%s", book_publisher[current_book_number]);
+  scanf("%s", book[*current_book_number].publisher);
   printf("\n");
   printf("책이 정상적으로 추가되었습니다.\n");
   system("cls");
-  show_MainMenu();
+  show_MainMenu(book, current_book_number);
   return;
 }
-void search_books() {
+void search_books(struct book *book, int* current_book_number) {
   system("cls");
   int search_method_choice;
   int book_number=0;
@@ -156,9 +162,9 @@ void search_books() {
       printf("제목을 입력해주세요.\n");
       printf(" : ");
       scanf("%s", received_title);
-      while(!(find_number!=101 || book_number==current_book_number)) {
-        if(received_title[0]==book_title[book_number][0]) {
-          if(compare_str(received_title, book_title[book_number]))
+      while(!(find_number!=101 || book_number==*current_book_number)) {
+        if(received_title[0]==book[book_number].title[0]) {
+          if(compare_str(received_title, book[book_number].title))
             break;
         }
         ++book_number;
@@ -172,9 +178,9 @@ void search_books() {
       printf("작가 이름을 입력해주세요.\n");
       printf(" : ");
       scanf("%s", received_author);
-      while(!(find_number!=101 || book_number==current_book_number)) {
-        if(received_author[0]==book_author[book_number][0]) {
-          if(compare_str(received_author, book_author[book_number]))
+      while(!(find_number!=101 || book_number==*current_book_number)) {
+        if(received_author[0]==book[book_number].author[0]) {
+          if(compare_str(received_author, book[book_number].author))
             break;
         }
         ++book_number;
@@ -188,9 +194,9 @@ void search_books() {
       printf("출판사 이름을 입력해주세요.\n");
       printf(" : ");
       scanf("%s", received_publisher);
-      while(!(find_number!=101 || book_number==current_book_number)) {
-        if(received_publisher[0]==book_publisher[book_number][0]) {
-          if(compare_str(received_publisher, book_publisher[book_number]))
+      while(!(find_number!=101 || book_number==*current_book_number)) {
+        if(received_publisher[0]==book[book_number].publisher[0]) {
+          if(compare_str(received_publisher, book[book_number].publisher))
             break;
         }
         ++book_number;
@@ -198,26 +204,26 @@ void search_books() {
       find_number=book_number;
       break;
     case 4:
-      show_MainMenu();
+      show_MainMenu(book, current_book_number);
       return;
       break;
     default:
       printf("1, 2, 3, 4번중 하나만 선택해주세요.\n");
-      search_books();
+      search_books(book, current_book_number);
       return;
       break;
   }
   printf("< 찾으시는 책의 정보 >\n");
-  printf("제목 : %s\n", book_title[find_number]);
-  printf("작가 : %s\n", book_author[find_number]);
-  printf("출판사 : %s\n", book_publisher[find_number]);
+  printf("제목 : %s\n", book[find_number].title);
+  printf("작가 : %s\n", book[find_number].author);
+  printf("출판사 : %s\n", book[find_number].publisher);
   printf("\n");
   printf("메인메뉴로 나가실려면 Enter키를 눌러주세요.");
   system("pause > nul");
-  show_MainMenu();
+  show_MainMenu(book, current_book_number);
   return;
 }
-void manage_books() {
+void manage_books(struct book *book, int* current_book_number) {
   system("cls");
   int manage_choice;
   int received_number;
@@ -228,7 +234,7 @@ void manage_books() {
   if(manage_choice<1 || manage_choice>3) {
     addBlank(2);
     printf("1~2번중 한 번호로 입력해주세요.\n");
-    manage_books();
+    manage_books(book, current_book_number);
     return;
   }
   switch(manage_choice) {
@@ -236,8 +242,8 @@ void manage_books() {
       addBlank(2);
       printf("대출하실 책의 번호 : ");
       scanf("%d", &received_number);
-      state[received_number]=1;
-      if(state[received_number]!=1) {
+      book[received_number].state=1;
+      if(book[received_number].state!=1) {
         addBlank(2);
         printf("에러가 발생하였습니다. #01\n");
       }
@@ -246,18 +252,18 @@ void manage_books() {
       addBlank(2);
       printf("반납하실 책의 번호 : ");
       scanf("%d", &received_number);
-      state[received_number]=0;
-      if(state[received_number]!=0) {
+      book[received_number].state=0;
+      if(book[received_number].state!=0) {
         addBlank(2);
         printf("에러가 발생하였습니다. #02\n");
       }
       break;
     case 3:
-      show_MainMenu();
+      show_MainMenu(book, current_book_number);
       return;
       break;
   }
-  show_MainMenu();
+  show_MainMenu(book, current_book_number);
 }
 int compare_str(char *str1, char *str2) {
   while(*str1) {
