@@ -1,7 +1,7 @@
 #include <stdio.h>
 int main(void) {
 	int sum=0, temp=0, first_num, last_num;
-	//init process
+	//init process , fibonacci 
 	first_num = 1;
 	last_num = 2;
 	while (last_num<=4000000) {
