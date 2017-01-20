@@ -8,6 +8,7 @@ void search_books(struct book *book, int* current_book_number);
 void manage_books(struct book *book, int* current_book_number);
 int compare_str(char*, char*);
 void copy_str(char*, char*);
+enum { HAVING, BORROWING };
 struct book {
   char title[30];
   char author[20];
@@ -18,7 +19,7 @@ int main(void) {
   struct book book[100];
   int current_book_number = 0;
   for(int i=0; i<=100; i++) {
-    book[i].state=0;
+    book[i].state=HAVING;
   }
   show_MainMenu(book, &current_book_number);
   return 0;
@@ -242,8 +243,8 @@ void manage_books(struct book *book, int* current_book_number) {
       addBlank(2);
       printf("대출하실 책의 번호 : ");
       scanf("%d", &received_number);
-      book[received_number].state=1;
-      if(book[received_number].state!=1) {
+      book[received_number].state=BORROWING;
+      if(book[received_number].state!=BORROWING) {
         addBlank(2);
         printf("에러가 발생하였습니다. #01\n");
       }
@@ -252,8 +253,8 @@ void manage_books(struct book *book, int* current_book_number) {
       addBlank(2);
       printf("반납하실 책의 번호 : ");
       scanf("%d", &received_number);
-      book[received_number].state=0;
-      if(book[received_number].state!=0) {
+      book[received_number].state=HAVING;
+      if(book[received_number].state!=HAVING) {
         addBlank(2);
         printf("에러가 발생하였습니다. #02\n");
       }
