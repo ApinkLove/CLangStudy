@@ -4,6 +4,7 @@ int main() {
 	int count = 1;
 	int temp, guess;
 	while (count != 10001) {
+		/* prime number will be odd number except 2 */
 		for (int i = 3; i <= num; i+=2) {
 			if (num%i == 0 && num!=i)
 				break;
